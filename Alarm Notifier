@@ -1,5 +1,5 @@
 /**
- *  Notify If Alarm State Changes
+ *  ADT Alarm status Notifier
  *
  *  Copyright 2018 CRAIG KING
  *
@@ -14,10 +14,10 @@
  *
  */
 definition(
-    name: "Notify If Alarm State Changes",
+    name: "ADT Alarm status Notifier",
     namespace: "Mavrrick",
     author: "CRAIG KING",
-    description: "Improved notification if ADT Alarm state changes ",
+    description: "Notifications if ADT Alarm state changes ",
     category: "Safety & Security",
     iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
     iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
