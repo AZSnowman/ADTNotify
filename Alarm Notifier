@@ -26,13 +26,13 @@ definition(
 
 preferences {
 	section("Send this message if alarm changes to Disarmed"){
-		input "messageDisarmed", "text", title: "Message Text", required: true
+		input "messageDisarmed", "text", title: "Message Text", required: false
 	}
 	section("Send this message if alarm changes to Armed/Away"){
-		input "messageArmedAway", "text", title: "Message Text", required: true
+		input "messageArmedAway", "text", title: "Message Text", required: false
 	}
 	section("Send this message if alarm changes to Armed/Stay"){
-		input "messageArmedStay", "text", title: "Message Text", required: true
+		input "messageArmedStay", "text", title: "Message Text", required: false
 	}
     section("Use these devices when ADT Alarm is triggered"){
 		input "contact", "capability.contactSensor", title: "Look for ADT Activity on these contact sesors", required: false, multiple: true
@@ -154,6 +154,10 @@ switch (evt.value)
     {
     case "armedAway":
     	def msg = messageArmedAway
+        if (msg == null ) {
+        	log.debug "Message not configured. Skipping notification"
+            }
+        else {
         log.debug "$evt.name:$evt.value, pushAndPhone:$pushAndPhone, '$msg'"
 
 	Map options = [:]	
@@ -182,10 +186,14 @@ switch (evt.value)
 	if (frequency) {
 		state[evt.deviceId] = now()
 	}
-
+}
         break
     case "armedStay":
     	def msg = messageArmedStay
+                if ( msg == null ) {
+        	log.debug "Message not configured. Skipping notification"
+            }
+        else {
         log.debug "Case Armstay., '$msg'"
         log.debug "$evt.name:$evt.value, pushAndPhone:$pushAndPhone, '$msg'"
 
@@ -215,10 +223,14 @@ switch (evt.value)
 	if (frequency) {
 		state[evt.deviceId] = now()
 	}
-
+}
         break
     case "disarmed":
     	def msg = messageDisarmed
+                if (msg == null ) {
+        	log.debug "Message not configured. Skipping notification"
+            }
+        else {
         log.debug "Case disarmed., '$msg'"
         log.debug "$evt.name:$evt.value, pushAndPhone:$pushAndPhone, '$msg'"
 
@@ -248,41 +260,9 @@ switch (evt.value)
 	if (frequency) {
 		state[evt.deviceId] = now()
 	}
-
+}
         break
-            case "disarmed":
-    	def msg = messageDisarmed
-        log.debug "Case disarmed., '$msg'"
-        log.debug "$evt.name:$evt.value, pushAndPhone:$pushAndPhone, '$msg'"
 
-	Map options = [:]	
-
-	if (location.contactBookEnabled) {
-		sendNotificationToContacts(msg, recipients, options)
-	} else {
-		if (phone) {
-			options.phone = phone
-			if (pushAndPhone != 'No') {
-				log.debug 'Sending push and SMS'
-				options.method = 'both'
-			} else {
-				log.debug 'Sending SMS'
-				options.method = 'phone'
-			}
-		} else if (pushAndPhone != 'No') {
-			log.debug 'Sending push'
-			options.method = 'push'
-		} else {
-			log.debug 'Sending nothing'
-			options.method = 'none'
-		}
-		sendNotification(msg, options)
-	}
-	if (frequency) {
-		state[evt.deviceId] = now()
-	}
-
-        break
     default:
 		log.debug "Ignoring unexpected ADT alarm mode."
         log.debug "$evt.name:$evt.value, pushAndPhone:$pushAndPhone, '$msg'"
