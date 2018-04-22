@@ -117,7 +117,7 @@ switch (evt.value)
     	break
     default:
 	log.debug "Notify got alarm event ${evt}"
-    def devices = settings.water 
+    def devices = settings.water + settings.contact + settings.motion 
     log.debug "$evt.name:$evt.value, pushAndPhone:$pushAndPhone, '$msg'"
         log.debug "These devices were found ${devices.id} are being reviewed."
         log.debug "The event id to be compared is ${evt.value}"  
